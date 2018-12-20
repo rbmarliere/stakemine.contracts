@@ -50,7 +50,6 @@ fi
 
 if prompt_input_yN "stake $account from accountnum11"; then
     $cleos system delegatebw accountnum11 $account "0.0000 EOS" "1.0000 EOS" -p accountnum11
+    $cleos push action $account stake '["accountnum11"]' -p accountnum11
 fi
-
-$cleos push action $account printdeleg '["noop"]' -p $account
 

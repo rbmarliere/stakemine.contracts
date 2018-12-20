@@ -1,10 +1,13 @@
 #include <eosiolib/asset.hpp>
 #include <eosiolib/eosio.hpp>
+#include <eosiolib/time.hpp>
 #include <string>
+#include "delegate_bandwidth.hpp"
 
 namespace darma
 {
     using namespace eosio;
+    using namespace eosiosystem;
     using std::string;
 
     class [[eosio::contract("darma.token")]] token : public contract
@@ -13,11 +16,11 @@ namespace darma
             using contract::contract;
 
             [[eosio::action]]
-            void printdeleg( name noop );
+            void stake( name holder );
 
             [[eosio::action]]
-            void create( name   issuer,
-                         asset  maximum_supply);
+            void create( name  issuer,
+                         asset maximum_supply);
 
             [[eosio::action]]
             void issue( name to, asset quantity, string memo );
@@ -26,10 +29,10 @@ namespace darma
             void retire( asset quantity, string memo );
 
             [[eosio::action]]
-            void transfer( name     from,
-                           name     to,
-                           asset    quantity,
-                           string   memo );
+            void transfer( name   from,
+                           name   to,
+                           asset  quantity,
+                           string memo );
 
             [[eosio::action]]
             void open( name owner, const symbol& symbol, name ram_payer );
@@ -52,16 +55,6 @@ namespace darma
             }
 
         private:
-            struct delegated_bandwidth {
-                name          from;
-                name          to;
-                asset         net_weight;
-                asset         cpu_weight;
-
-                uint64_t primary_key()const { return from.value; }
-            };
-            typedef eosio::multi_index< "delband"_n, delegated_bandwidth > del_bandwidth_table;
-
             struct [[eosio::table]] account
             {
                 asset balance;
@@ -79,6 +72,17 @@ namespace darma
                 uint64_t primary_key()const { return supply.symbol.code().raw(); }
             };
             typedef eosio::multi_index< "stat"_n, currency_stats > stats;
+
+            struct [[eosio::table]] staking_account
+            {
+                name           holder;
+                time_point_sec request_time;
+                asset          cpu_quantity;
+                asset          net_quantity;
+
+                uint64_t primary_key()const { return holder.value; }
+            };
+            typedef eosio::multi_index< "stake"_n, staking_account > holders;
 
             void sub_balance( name owner, asset value );
             void add_balance( name owner, asset value, name ram_payer );

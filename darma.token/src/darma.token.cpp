@@ -2,19 +2,19 @@
 
 namespace darma
 {
-    void token::printdeleg( name noop )
+    void token::stake( name holder )
     {
-        del_bandwidth_table del_tbl( "eosio"_n, "darmatoken11"_n.value );
-        for( const auto& d : del_tbl ) {
-            print(" | delegate from: ");
-            print(d.from);
-            print(" | delegate to: ");
-            print(d.to);
-            print(" | delegate net: ");
-            print(d.net_weight);
-            print(" | delegate cpu: ");
-            print(d.cpu_weight);
-        }
+        del_bandwidth_table del_table( "eosio"_n, holder.value );
+        auto itr = del_table.find( _self.value );
+        eosio_assert( itr != del_table.end(), "no delegation found");
+
+        holders holders_table( _self, holder.value );
+        holders_table.emplace( _self, [&]( auto& h ) {
+            h.holder = holder;
+            h.request_time = time_point_sec( now() );
+            h.net_quantity = (*itr).net_weight;
+            h.cpu_quantity = (*itr).cpu_weight;
+        });
     }
 
     void token::create( name   issuer,
@@ -176,5 +176,5 @@ namespace darma
     }
 }
 
-EOSIO_DISPATCH( darma::token, (printdeleg)(create)(issue)(transfer)(open)(close)(retire) )
+EOSIO_DISPATCH( darma::token, (stake)(create)(issue)(transfer)(open)(close)(retire) )
 
