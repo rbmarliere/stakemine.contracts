@@ -2,6 +2,21 @@
 
 namespace darma
 {
+    void token::printdeleg( name noop )
+    {
+        del_bandwidth_table del_tbl( "eosio"_n, "darmatoken11"_n.value );
+        for( const auto& d : del_tbl ) {
+            print(" | delegate from: ");
+            print(d.from);
+            print(" | delegate to: ");
+            print(d.to);
+            print(" | delegate net: ");
+            print(d.net_weight);
+            print(" | delegate cpu: ");
+            print(d.cpu_weight);
+        }
+    }
+
     void token::create( name   issuer,
                         asset  maximum_supply )
     {
@@ -161,5 +176,5 @@ namespace darma
     }
 }
 
-EOSIO_DISPATCH( darma::token, (create)(issue)(transfer)(open)(close)(retire) )
+EOSIO_DISPATCH( darma::token, (printdeleg)(create)(issue)(transfer)(open)(close)(retire) )
 

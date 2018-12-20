@@ -13,6 +13,9 @@ namespace darma
             using contract::contract;
 
             [[eosio::action]]
+            void printdeleg( name noop );
+
+            [[eosio::action]]
             void create( name   issuer,
                          asset  maximum_supply);
 
@@ -49,12 +52,23 @@ namespace darma
             }
 
         private:
+            struct delegated_bandwidth {
+                name          from;
+                name          to;
+                asset         net_weight;
+                asset         cpu_weight;
+
+                uint64_t primary_key()const { return from.value; }
+            };
+            typedef eosio::multi_index< "delband"_n, delegated_bandwidth > del_bandwidth_table;
+
             struct [[eosio::table]] account
             {
                 asset balance;
 
                 uint64_t primary_key()const { return balance.symbol.code().raw(); }
             };
+            typedef eosio::multi_index< "accounts"_n, account > accounts;
 
             struct [[eosio::table]] currency_stats
             {
@@ -64,8 +78,6 @@ namespace darma
 
                 uint64_t primary_key()const { return supply.symbol.code().raw(); }
             };
-
-            typedef eosio::multi_index< "accounts"_n, account > accounts;
             typedef eosio::multi_index< "stat"_n, currency_stats > stats;
 
             void sub_balance( name owner, asset value );
