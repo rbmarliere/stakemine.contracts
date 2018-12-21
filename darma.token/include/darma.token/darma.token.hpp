@@ -1,3 +1,5 @@
+#pragma once
+
 #include <eosiolib/asset.hpp>
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/time.hpp>
