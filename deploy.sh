@@ -1,9 +1,11 @@
 #!/bin/bash
 
+account=darmatoken11
+account_test=accountnum11
 cleos="cleos -u http://10.197.70.202:8888"
 privkey=5KiK5Ds4LY9159Km5GPWrrR69iEz3HPf6bpUAYKCugFpPoqXcaC
 pubkey=EOS8aKH63HLph6Z4wMSvZ5sY67wWzY1mAZ8ZfiWBrymSMYnQ7iMm4
-account=darmatoken11
+symbol=DRAMA
 wallet=local
 walletpw=$(cat ~/eosio-wallet/local.passwd)
 
@@ -48,8 +50,15 @@ if prompt_input_yN "init $account token stats"; then
     $cleos push action $account create '["'$account'","10000.0000 DRAMA"]' -p $account
 fi
 
-if prompt_input_yN "stake $account from accountnum11"; then
-    $cleos system delegatebw accountnum11 $account "0.0000 EOS" "1.0000 EOS" -p accountnum11
-    $cleos push action $account stake '["accountnum11"]' -p accountnum11
+if prompt_input_yN "stake $account from $account_test"; then
+    $cleos system delegatebw $account_test $account "0.0000 EOS" "1.0000 EOS" -p $account_test
+    $cleos push action $account stake '["'$account_test'"]' -p $account_test
+    $cleos get table $account $account_test stake
+fi
+
+if prompt_input_yN "claim staking rewards from $account_test"; then
+    $cleos get currency balance $account $account_test $symbol
+    $cleos push action $account claim '["'$account_test'"]' -p $account_test
+    $cleos get currency balance $account $account_test $symbol
 fi
 

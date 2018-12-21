@@ -4,6 +4,11 @@
 #include <string>
 #include "delegate_bandwidth.hpp"
 
+#define SYMBOL_CODE      "DRAMA"
+#define SYMBOL_PRECISION 4
+#define PERIOD_IN_SEC    3600 // 1h
+#define PERIOD_REWARD    10
+
 namespace darma
 {
     using namespace eosio;
@@ -14,6 +19,9 @@ namespace darma
     {
         public:
             using contract::contract;
+
+            [[eosio::action]]
+            void claim( name holder );
 
             [[eosio::action]]
             void stake( name holder );
