@@ -162,5 +162,5 @@ namespace darma
     }
 }
 
-EOSIO_DISPATCH( darma::token, (claim)(stake)(create)(issue)(transfer)(open)(close)(retire) )
+EOSIO_DISPATCH( darma::token, (claim)(stake)(unstake)(create)(issue)(transfer)(open)(close)(retire) )
 

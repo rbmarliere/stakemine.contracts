@@ -29,6 +29,9 @@ namespace darma
             void stake( name holder );
 
             [[eosio::action]]
+            void unstake( name holder );
+
+            [[eosio::action]]
             void create( name  issuer,
                          asset maximum_supply);
 

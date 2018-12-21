@@ -77,5 +77,17 @@ namespace darma
             });
         }
     }
+
+    void token::unstake( name holder )
+    {
+        require_auth( holder );
+
+        // remove holder from stake table
+        holders holders_table( _self, holder.value );
+        auto itr = holders_table.find( holder.value );
+        if( itr != holders_table.end() )
+            holders_table.erase( itr );
+    }
+
 }
 

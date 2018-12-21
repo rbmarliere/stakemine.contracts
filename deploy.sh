@@ -1,7 +1,7 @@
 #!/bin/bash
 
 account=darmatoken11
-account_test=accountnum11
+account_test=accountnum12
 cleos="cleos -u http://10.197.70.202:8888"
 privkey=5KiK5Ds4LY9159Km5GPWrrR69iEz3HPf6bpUAYKCugFpPoqXcaC
 pubkey=EOS8aKH63HLph6Z4wMSvZ5sY67wWzY1mAZ8ZfiWBrymSMYnQ7iMm4
@@ -56,9 +56,16 @@ if prompt_input_yN "stake $account from $account_test"; then
     $cleos get table $account $account_test stake
 fi
 
-if prompt_input_yN "claim staking rewards from $account_test"; then
+if prompt_input_yN "claim $account staking rewards from $account_test"; then
     $cleos get currency balance $account $account_test $symbol
     $cleos push action $account claim '["'$account_test'"]' -p $account_test
     $cleos get currency balance $account $account_test $symbol
+fi
+
+if prompt_input_yN "unstake $account from $account_test"; then
+    $cleos system undelegatebw $account_test $account "0.0000 EOS" "1.0000 EOS" -p $account_test
+    $cleos push action $account unstake '["'$account_test'"]' -p $account_test
+    $cleos get table eosio $account_test delband
+    $cleos get table $account $account_test stake
 fi
 
