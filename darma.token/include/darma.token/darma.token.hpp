@@ -6,10 +6,12 @@
 #include <string>
 #include "delegate_bandwidth.hpp"
 
-#define SYMBOL_CODE      "DRAMA"
-#define SYMBOL_PRECISION 4
-#define PERIOD_IN_SEC    3600 // 1h
-#define PERIOD_REWARD    10
+#define SYMBOL_CODE       "DRAMA"
+#define SYMBOL_PRECISION  4
+#define STAKE_FACTOR      100  // EOS
+#define PERIOD_IN_SEC     3600 // 1h
+#define PERIOD_CPU_REWARD 1    // 1 token per STAKE_FACTOR
+#define PERIOD_NET_REWARD 1    // 1 token per STAKE_FACTOR
 
 namespace darma
 {
@@ -90,8 +92,8 @@ namespace darma
             {
                 name           holder;
                 time_point_sec request_time;
-                asset          cpu_quantity;
-                asset          net_quantity;
+                asset          cpu_weight;
+                asset          net_weight;
 
                 uint64_t primary_key()const { return holder.value; }
             };

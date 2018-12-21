@@ -20,8 +20,18 @@ namespace darma
         auto code = symbol_code( SYMBOL_CODE );
         auto _now = time_point_sec( now() );
         auto offset = ( _now - (*itr).request_time ).to_seconds();
-        uint64_t aux = PERIOD_REWARD;// * 40 / 100;
+        uint64_t weighted_period_reward =
+            (( (*itr).cpu_weight.amount * PERIOD_CPU_REWARD ) / STAKE_FACTOR)
+            +
+            (( (*itr).net_weight.amount * PERIOD_NET_REWARD ) / STAKE_FACTOR) ;
+        uint64_t aux = ( weighted_period_reward * offset / PERIOD_IN_SEC );
         asset reward = asset( aux, symbol( code, SYMBOL_PRECISION ) );
+
+        // debug
+        print("seconds staked: ");
+        print(offset);
+        print(" | reward: ");
+        print(reward);
 
         // initialize stats object
         stats statstable( _self, code.raw() );
@@ -44,8 +54,8 @@ namespace darma
         holders_table.modify( itr, _self, [&]( auto& h ) {
             h.holder = holder;
             h.request_time = _now;
-            h.net_quantity = (*deleg).net_weight;
-            h.cpu_quantity = (*deleg).cpu_weight;
+            h.net_weight = (*deleg).net_weight;
+            h.cpu_weight = (*deleg).cpu_weight;
         });
     }
 
@@ -65,15 +75,15 @@ namespace darma
             holders_table.emplace( _self, [&]( auto& h ) {
                 h.holder = holder;
                 h.request_time = time_point_sec( now() );
-                h.net_quantity = (*deleg).net_weight;
-                h.cpu_quantity = (*deleg).cpu_weight;
+                h.net_weight = (*deleg).net_weight;
+                h.cpu_weight = (*deleg).cpu_weight;
             });
         } else {
             holders_table.modify( itr, _self, [&]( auto& h ) {
                 h.holder = holder;
                 h.request_time = time_point_sec( now() );
-                h.net_quantity = (*deleg).net_weight;
-                h.cpu_quantity = (*deleg).cpu_weight;
+                h.net_weight = (*deleg).net_weight;
+                h.cpu_weight = (*deleg).cpu_weight;
             });
         }
     }
