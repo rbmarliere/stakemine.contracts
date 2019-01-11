@@ -1,7 +1,7 @@
 #include <eosiolib/asset.hpp>
 #include <eosiolib/eosio.hpp>
 
-#define SYMBOL_CODE       "DRAMA"
+#define SYMBOL_CODE       "STK"
 #define SYMBOL_PRECISION  4
 #define STAKE_FACTOR      100  // EOS
 #define PERIOD_IN_SEC     3600 // 1h

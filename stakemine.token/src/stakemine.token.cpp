@@ -1,7 +1,7 @@
-#include <darma.token/darma.token.hpp>
-#include "darma.deleg.cpp"
+#include <stakemine.token/stakemine.token.hpp>
+#include "stakemine.deleg.cpp"
 
-namespace darma
+namespace stakemine
 {
     void token::create( name   issuer,
                         asset  maximum_supply )
@@ -162,5 +162,5 @@ namespace darma
     }
 }
 
-EOSIO_DISPATCH( darma::token, (claim)(stake)(unstake)(create)(issue)(transfer)(open)(close)(retire) )
+EOSIO_DISPATCH( stakemine::token, (claim)(stake)(unstake)(create)(issue)(transfer)(open)(close)(retire) )
 

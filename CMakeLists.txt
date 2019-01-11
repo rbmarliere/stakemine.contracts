@@ -29,7 +29,7 @@ else()
    set(TEST_BUILD_TYPE ${CMAKE_BUILD_TYPE})
 endif()
 
-add_subdirectory(darma.token)
+add_subdirectory(stakemine.token)
 
 if (APPLE)
    set(OPENSSL_ROOT "/usr/local/opt/openssl")

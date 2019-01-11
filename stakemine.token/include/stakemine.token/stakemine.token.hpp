@@ -4,15 +4,15 @@
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/time.hpp>
 #include <string>
-#include "darma.deleg.hpp"
+#include "stakemine.deleg.hpp"
 
-namespace darma
+namespace stakemine
 {
     using namespace eosio;
     using namespace eosiosystem;
     using std::string;
 
-    class [[eosio::contract("darma.token")]] token : public contract
+    class [[eosio::contract("stakemine.token")]] token : public contract
     {
         public:
             using contract::contract;

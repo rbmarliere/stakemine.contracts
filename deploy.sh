@@ -1,11 +1,11 @@
 #!/bin/bash
 
-account=darmatoken11
+account=stakemine112
 account_test=accountnum13
 cleos="cleos -u http://10.197.70.202:8888"
 privkey=5KiK5Ds4LY9159Km5GPWrrR69iEz3HPf6bpUAYKCugFpPoqXcaC
 pubkey=EOS8aKH63HLph6Z4wMSvZ5sY67wWzY1mAZ8ZfiWBrymSMYnQ7iMm4
-symbol=DRAMA
+symbol=STK
 wallet=local
 walletpw=$(cat ~/eosio-wallet/local.passwd)
 
@@ -43,11 +43,11 @@ if prompt_input_yN "buyram to $account account"; then
 fi
 
 if prompt_input_yN "deploy code to $account account"; then
-    $cleos set contract $account . build/darma.token/darma.token.wasm build/darma.token/darma.token.abi -p $account
+    $cleos set contract $account . build/stakemine.token/stakemine.token.wasm build/stakemine.token/stakemine.token.abi -p $account
 fi
 
 if prompt_input_yN "init $account token stats"; then
-    $cleos push action $account create '["'$account'","10000.0000 DRAMA"]' -p $account
+    $cleos push action $account create '["'$account'","10000.0000 '$symbol'"]' -p $account
 fi
 
 if prompt_input_yN "stake $account from $account_test"; then

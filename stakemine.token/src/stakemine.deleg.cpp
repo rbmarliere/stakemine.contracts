@@ -1,6 +1,6 @@
-#include <darma.token/darma.token.hpp>
+#include <stakemine.token/stakemine.token.hpp>
 
-namespace darma
+namespace stakemine
 {
     void token::claim( name holder )
     {
