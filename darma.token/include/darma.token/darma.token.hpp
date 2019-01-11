@@ -4,14 +4,7 @@
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/time.hpp>
 #include <string>
-#include "delegate_bandwidth.hpp"
-
-#define SYMBOL_CODE       "DRAMA"
-#define SYMBOL_PRECISION  4
-#define STAKE_FACTOR      100  // EOS
-#define PERIOD_IN_SEC     3600 // 1h
-#define PERIOD_CPU_REWARD 1    // 1 token per STAKE_FACTOR
-#define PERIOD_NET_REWARD 1    // 1 token per STAKE_FACTOR
+#include "darma.deleg.hpp"
 
 namespace darma
 {

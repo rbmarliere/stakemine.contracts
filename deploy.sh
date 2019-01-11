@@ -1,7 +1,7 @@
 #!/bin/bash
 
 account=darmatoken11
-account_test=accountnum12
+account_test=accountnum13
 cleos="cleos -u http://10.197.70.202:8888"
 privkey=5KiK5Ds4LY9159Km5GPWrrR69iEz3HPf6bpUAYKCugFpPoqXcaC
 pubkey=EOS8aKH63HLph6Z4wMSvZ5sY67wWzY1mAZ8ZfiWBrymSMYnQ7iMm4
