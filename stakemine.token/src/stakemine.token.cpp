@@ -162,5 +162,5 @@ namespace stakemine
     }
 }
 
-EOSIO_DISPATCH( stakemine::token, (claim)(stake)(unstake)(create)(issue)(transfer)(open)(close)(retire) )
+EOSIO_DISPATCH( stakemine::token, (stake)(unstake)(list)(delist)(refresh)(update)(create)(issue)(transfer)(open)(close)(retire) )
 
