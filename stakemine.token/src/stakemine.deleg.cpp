@@ -56,15 +56,29 @@ namespace stakemine
         // todo: stakemine's token mining
     }
 
-    void token::unstake( name holder )
+    void token::unstake( name contract,
+                         name holder )
     {
         require_auth( holder );
 
         // remove holder from stake table
-        holders holders_table( _self, holder.value );
+        holders holders_table( _self, contract.value );
         auto itr = holders_table.find( holder.value );
-        if( itr != holders_table.end() )
-            holders_table.erase( itr );
+        eosio_assert( itr != holders_table.end(), "holder not found" );
+        asset holder_cpu = itr->cpu_weight;
+        asset holder_net = itr->net_weight;
+        holders_table.erase( itr );
+
+        // check if listing exists
+        listings listings_table( _self, _self.value );
+        auto listing = listings_table.find( contract.value );
+        eosio_assert( listing != listings_table.end(), "listing not found" );
+
+        // decrement listing totals
+        listings_table.modify( listing, _self, [&]( auto& l ) {
+            l.cpu_total -= holder_cpu;
+            l.net_total -= holder_net;
+        });
     }
 
 }

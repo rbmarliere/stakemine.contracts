@@ -22,9 +22,10 @@ namespace stakemine
                         name holder );
 
             [[eosio::action]]
+            void unstake( name contract,
+                          name holder );
 
             [[eosio::action]]
-            void unstake( name holder );
 
             [[eosio::action]]
             void create( name  issuer,
