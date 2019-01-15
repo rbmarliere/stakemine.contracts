@@ -18,10 +18,10 @@ namespace stakemine
             using contract::contract;
 
             [[eosio::action]]
-            void claim( name holder );
+            void stake( name contract,
+                        name holder );
 
             [[eosio::action]]
-            void stake( name holder );
 
             [[eosio::action]]
             void unstake( name holder );
