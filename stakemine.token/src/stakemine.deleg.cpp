@@ -152,5 +152,51 @@ namespace stakemine
         }
     }
 
+    void token::refresh( name contract )
+    {
+        require_auth( contract );
+
+        // check if listing exists
+        listings listings_table( _self, _self.value );
+        auto listing = listings_table.find( contract.value );
+        eosio_assert( listing != listings_table.end(), "listing not found" );
+
+        // check if there are holders
+        holders holders_table( _self, contract.value );
+        eosio_assert( holders_table.begin() != holders_table.end(), "holder not found" );
+
+        // check eosio.system delband table for each holder
+        vector<uint64_t> holders_to_delete;
+        for( auto& holder : holders_table ) {
+            del_bandwidth_table del_table( "eosio"_n, holder.holder.value );
+            auto deleg = del_table.find( contract.value );
+            if(
+                deleg == del_table.end()
+                ||
+                deleg->cpu_weight != holder.cpu_weight
+                ||
+                deleg->net_weight != holder.net_weight
+            ) {
+                // if user stopped or changed delegation, erase it
+                holders_to_delete.push_back( holder.holder.value );
+            }
+        }
+        for( uint64_t holder : holders_to_delete ) {
+            auto itr = holders_table.find( holder );
+            if( itr != holders_table.end() ) {
+                asset holder_cpu = itr->cpu_weight;
+                asset holder_net = itr->net_weight;
+
+                holders_table.erase( itr );
+
+                // decrement listing totals
+                listings_table.modify( listing, _self, [&]( auto& l ) {
+                    l.cpu_total -= holder_cpu;
+                    l.net_total -= holder_net;
+                });
+            }
+        }
+    }
+
 }
 

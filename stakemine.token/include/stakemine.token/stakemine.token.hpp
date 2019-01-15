@@ -41,6 +41,9 @@ namespace stakemine
             void delist( name contract );
 
             [[eosio::action]]
+            void refresh( name contract );
+
+            [[eosio::action]]
             void create( name  issuer,
                          asset maximum_supply );
 
