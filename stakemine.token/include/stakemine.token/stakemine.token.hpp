@@ -11,6 +11,7 @@ namespace stakemine
     using namespace eosio;
     using namespace eosiosystem;
     using std::string;
+    using std::vector;
 
     class [[eosio::contract("stakemine.token")]] token : public contract
     {
@@ -35,6 +36,9 @@ namespace stakemine
                        asset    cpu_reward,
                        asset    net_target,
                        asset    net_reward );
+
+            [[eosio::action]]
+            void delist( name contract );
 
             [[eosio::action]]
             void create( name  issuer,

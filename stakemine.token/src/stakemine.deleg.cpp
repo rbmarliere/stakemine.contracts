@@ -126,5 +126,31 @@ namespace stakemine
             });
     }
 
+    void token::delist( name contract )
+    {
+        require_auth( _self );
+
+        // check if listing exists
+        listings listings_table( _self, _self.value );
+        auto listing = listings_table.find( contract.value );
+        eosio_assert( listing != listings_table.end(), "listing not found" );
+
+        // delete listing
+        listings_table.erase( listing );
+
+        // delete all holders associated
+        vector<uint64_t> holders_to_delete;
+        holders holders_table( _self, contract.value );
+        for( auto& holder : holders_table ) {
+            if( holder.contract == contract )
+                holders_to_delete.push_back( holder.holder.value );
+        }
+        for( uint64_t holder : holders_to_delete ) {
+            auto itr = holders_table.find( holder );
+            if( itr != holders_table.end() )
+                holders_table.erase( itr );
+        }
+    }
+
 }
 
