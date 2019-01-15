@@ -28,13 +28,16 @@ namespace stakemine
 
             [[eosio::action]]
             void create( name  issuer,
-                         asset maximum_supply);
+                         asset maximum_supply );
 
             [[eosio::action]]
-            void issue( name to, asset quantity, string memo );
+            void issue( name   to,
+                        asset  quantity,
+                        string memo );
 
             [[eosio::action]]
-            void retire( asset quantity, string memo );
+            void retire( asset  quantity,
+                         string memo );
 
             [[eosio::action]]
             void transfer( name   from,
@@ -43,19 +46,25 @@ namespace stakemine
                            string memo );
 
             [[eosio::action]]
-            void open( name owner, const symbol& symbol, name ram_payer );
+            void open( name          owner,
+                       const symbol& symbol,
+                       name          ram_payer );
 
             [[eosio::action]]
-            void close( name owner, const symbol& symbol );
+            void close( name          owner,
+                        const symbol& symbol );
 
-            static asset get_supply( name token_contract_account, symbol_code sym_code )
+            static asset get_supply( name        token_contract_account,
+                                     symbol_code sym_code )
             {
                 stats statstable( token_contract_account, sym_code.raw() );
                 const auto& st = statstable.get( sym_code.raw() );
                 return st.supply;
             }
 
-            static asset get_balance( name token_contract_account, name owner, symbol_code sym_code )
+            static asset get_balance( name        token_contract_account,
+                                      name        owner,
+                                      symbol_code sym_code )
             {
                 accounts accountstable( token_contract_account, owner.value );
                 const auto& ac = accountstable.get( sym_code.raw() );
@@ -63,6 +72,13 @@ namespace stakemine
             }
 
         private:
+            void sub_balance( name  owner,
+                              asset value );
+
+            void add_balance( name  owner,
+                              asset value,
+                              name  ram_payer );
+
             struct [[eosio::table]] account
             {
                 asset balance;
@@ -92,8 +108,6 @@ namespace stakemine
             };
             typedef eosio::multi_index< "stake"_n, staking_account > holders;
 
-            void sub_balance( name owner, asset value );
-            void add_balance( name owner, asset value, name ram_payer );
     };
 }
 
