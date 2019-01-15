@@ -44,6 +44,11 @@ namespace stakemine
             void refresh( name contract );
 
             [[eosio::action]]
+            void update( name           contract,
+                         name           holder,
+                         time_point_sec request_time );
+
+            [[eosio::action]]
             void create( name  issuer,
                          asset maximum_supply );
 

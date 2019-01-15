@@ -198,5 +198,27 @@ namespace stakemine
         }
     }
 
+    void token::update( name           contract,
+                        name           holder,
+                        time_point_sec request_time )
+    {
+        require_auth( contract );
+
+        // check if listing exists
+        listings listings_table( _self, _self.value );
+        auto listing = listings_table.find( contract.value );
+        eosio_assert( listing != listings_table.end(), "listing not found" );
+
+        // check if holder exists
+        holders holders_table( _self, contract.value );
+        auto itr = holders_table.find( holder.value );
+        eosio_assert( itr != holders_table.end(), "holder not found" );
+
+        // update holder request_time
+        holders_table.modify( itr, _self, [&]( auto& h ) {
+            h.request_time = request_time;
+        });
+    }
+
 }
 
