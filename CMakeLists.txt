@@ -30,6 +30,7 @@ else()
 endif()
 
 add_subdirectory(stakemine.token)
+add_subdirectory(test.token)
 
 if (APPLE)
    set(OPENSSL_ROOT "/usr/local/opt/openssl")
