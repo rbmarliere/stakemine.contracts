@@ -26,6 +26,15 @@ namespace stakemine
                           name holder );
 
             [[eosio::action]]
+            void list( name     contract,
+                       string   description,
+                       string   url,
+                       string   image_url,
+                       uint64_t period,
+                       asset    cpu_target,
+                       asset    cpu_reward,
+                       asset    net_target,
+                       asset    net_reward );
 
             [[eosio::action]]
             void create( name  issuer,

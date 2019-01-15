@@ -81,5 +81,50 @@ namespace stakemine
         });
     }
 
+    void token::list( name     contract,
+                      string   description,
+                      string   url,
+                      string   image_url,
+                      uint64_t period,
+                      asset    cpu_target,
+                      asset    cpu_reward,
+                      asset    net_target,
+                      asset    net_reward )
+    {
+        require_auth( _self );
+
+        class symbol eos( symbol_code("EOS"), 4 );
+        asset zero = asset( 0, eos );
+
+        listings listings_table( _self, _self.value );
+        auto itr = listings_table.find( contract.value );
+        if( itr == listings_table.end() )
+            listings_table.emplace( _self, [&]( auto& l ) {
+                l.contract    = contract;
+                l.description = description;
+                l.url         = url;
+                l.image_url   = image_url;
+                l.period      = period;
+                l.cpu_target  = cpu_target;
+                l.cpu_reward  = cpu_reward;
+                l.cpu_total   = zero;
+                l.net_target  = net_target;
+                l.net_reward  = net_reward;
+                l.net_total   = zero;
+            });
+        else
+            listings_table.modify( itr, _self, [&]( auto& l ) {
+                l.contract    = contract;
+                l.description = description;
+                l.url         = url;
+                l.image_url   = image_url;
+                l.period      = period;
+                l.cpu_target  = cpu_target;
+                l.cpu_reward  = cpu_reward;
+                l.net_target  = net_target;
+                l.net_reward  = net_reward;
+            });
+    }
+
 }
 
