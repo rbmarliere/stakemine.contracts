@@ -62,6 +62,11 @@ namespace stakemine
     {
         require_auth( holder );
 
+        // check if listing exists
+        listings listings_table( _self, _self.value );
+        auto listing = listings_table.find( contract.value );
+        eosio_assert( listing != listings_table.end(), "listing not found" );
+
         // remove holder from stake table
         holders holders_table( _self, contract.value );
         auto itr = holders_table.find( holder.value );
@@ -69,11 +74,6 @@ namespace stakemine
         asset holder_cpu = itr->cpu_weight;
         asset holder_net = itr->net_weight;
         holders_table.erase( itr );
-
-        // check if listing exists
-        listings listings_table( _self, _self.value );
-        auto listing = listings_table.find( contract.value );
-        eosio_assert( listing != listings_table.end(), "listing not found" );
 
         // decrement listing totals
         listings_table.modify( listing, same_payer, [&]( auto& l ) {
