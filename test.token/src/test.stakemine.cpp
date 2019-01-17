@@ -46,22 +46,6 @@ namespace test
         uint64_t holder_reward = holder_cpu_reward + holder_net_reward;
         asset reward = asset( holder_reward, listing->cpu_reward.symbol );
 
-        // debug
-        print("cpu_weight: ");
-        print(holder->cpu_weight.amount);
-        print(" | cpu_total: ");
-        print(cpu_total);
-        print(" | total_cpu_reward: ");
-        print(total_cpu_reward);
-        print(" | offset: ");
-        print(offset);
-        print(" | period: ");
-        print(listing->period);
-        print(" | calc. reward: ");
-        print(holder_reward);
-        print(" | reward: ");
-        print(reward);
-
         // initialize stats object
         auto raw_code = listing->cpu_reward.symbol.code().raw();
         stats statstable( _self, raw_code );
