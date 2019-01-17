@@ -21,7 +21,7 @@ namespace stakemine
         holders holders_table( _self, contract.value );
         auto itr = holders_table.find( holder.value );
         if( itr == holders_table.end() ) {
-            holders_table.emplace( _self, [&]( auto& h ) {
+            holders_table.emplace( holder, [&]( auto& h ) {
                 h.holder       = holder;
                 h.contract     = contract;
                 h.cpu_weight   = deleg->cpu_weight;
@@ -30,15 +30,16 @@ namespace stakemine
             });
 
             // increment listing totals
-            listings_table.modify( listing, _self, [&]( auto& l ) {
+            listings_table.modify( listing, same_payer, [&]( auto& l ) {
                 l.cpu_total += deleg->cpu_weight;
                 l.net_total += deleg->net_weight;
             });
         } else {
+            // if user changed delegation, subtract his old weight from listing totals
             auto cpu_offset = listing->cpu_total - itr->cpu_weight;
             auto net_offset = listing->net_total - itr->net_weight;
 
-            holders_table.modify( itr, _self, [&]( auto& h ) {
+            holders_table.modify( itr, same_payer, [&]( auto& h ) {
                 h.holder       = holder;
                 h.contract     = contract;
                 h.cpu_weight   = deleg->cpu_weight;
@@ -46,8 +47,8 @@ namespace stakemine
                 h.request_time = time_point_sec( now() );
             });
 
-            // increment listing totals
-            listings_table.modify( listing, _self, [&]( auto& l ) {
+            // increment listing totals with new weight
+            listings_table.modify( listing, same_payer, [&]( auto& l ) {
                 l.cpu_total = cpu_offset + deleg->cpu_weight;
                 l.net_total = net_offset + deleg->net_weight;
             });
@@ -75,7 +76,7 @@ namespace stakemine
         eosio_assert( listing != listings_table.end(), "listing not found" );
 
         // decrement listing totals
-        listings_table.modify( listing, _self, [&]( auto& l ) {
+        listings_table.modify( listing, same_payer, [&]( auto& l ) {
             l.cpu_total -= holder_cpu;
             l.net_total -= holder_net;
         });
@@ -113,7 +114,7 @@ namespace stakemine
                 l.net_total   = zero;
             });
         else
-            listings_table.modify( itr, _self, [&]( auto& l ) {
+            listings_table.modify( itr, same_payer, [&]( auto& l ) {
                 l.contract    = contract;
                 l.description = description;
                 l.url         = url;
@@ -190,7 +191,7 @@ namespace stakemine
                 holders_table.erase( itr );
 
                 // decrement listing totals
-                listings_table.modify( listing, _self, [&]( auto& l ) {
+                listings_table.modify( listing, same_payer, [&]( auto& l ) {
                     l.cpu_total -= holder_cpu;
                     l.net_total -= holder_net;
                 });
@@ -215,7 +216,7 @@ namespace stakemine
         eosio_assert( itr != holders_table.end(), "holder not found" );
 
         // update holder request_time
-        holders_table.modify( itr, _self, [&]( auto& h ) {
+        holders_table.modify( itr, same_payer, [&]( auto& h ) {
             h.request_time = request_time;
         });
     }
